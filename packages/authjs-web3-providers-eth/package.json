@@ -1,0 +1,13 @@
+{
+  "name": "authjs-web3-providers-eth",
+  "version": "0.1.0",
+  "description": "AuthJS Web3 Providers Ethereum",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "palsergech",
+  "license": "ISC"
+}

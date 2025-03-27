@@ -1,0 +1,16 @@
+{
+  "name": "authjs-web3-providers",
+  "private": true,
+  "packageManager": "pnpm@9.15.1",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.4",
+    "typescript": "^5.0.0"
+  }
+}
