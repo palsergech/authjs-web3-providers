@@ -13,7 +13,8 @@
     "react-dom": "^19.0.0",
     "next": "15.2.4",
     "authjs-web3-providers-core": "workspace:*",
-    "authjs-web3-providers-eth": "workspace:*"
+    "authjs-web3-providers-eth": "workspace:*",
+    "next-auth": "catalog:next-auth-4"
   },
   "devDependencies": {
     "typescript": "^5",

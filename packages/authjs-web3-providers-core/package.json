@@ -7,6 +7,9 @@
   "scripts": {
     "build": "tsc -p ."
   },
+  "dependencies": {
+    "next-auth": "catalog:next-auth-4"
+  },
   "keywords": [],
   "author": "palsergech",
   "license": "ISC"
