@@ -9,8 +9,6 @@
     "test": "turbo run test",
     "lint": "turbo run lint"
   },
-  "dependencies": {
-  },
   "devDependencies": {
     "turbo": "^2.4.4",
     "typescript": "^5.0.0"

@@ -1,11 +1,15 @@
 {
-  "name": "authjs-web3-providers-eth",
+  "name": "authjs-web3-providers-siwe",
   "version": "0.1.0",
   "description": "AuthJS Web3 Providers Ethereum",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p ."
+  },
+  "dependencies": {
+    "next-auth": "catalog:next-auth-4",
+    "siwe": "catalog:siwe-3"
   },
   "keywords": [],
   "author": "palsergech",

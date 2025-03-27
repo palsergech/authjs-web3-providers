@@ -5,3 +5,5 @@ packages:
 catalogs:
   next-auth-4:
     next-auth: ^4.24.11
+  siwe-3:
+    siwe: ^3.0.0

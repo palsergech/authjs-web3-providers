@@ -1,6 +1,7 @@
 import NextAuth, {NextAuthOptions} from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import {User} from "@/domain/user";
+import {SiweProvider} from "authjs-web3-providers-siwe/src";
 
 const githubProvider = GithubProvider({
     clientId: process.env.GITHUB_CLIENT_ID!!,
@@ -9,8 +10,12 @@ const githubProvider = GithubProvider({
 
 export const authOptions: NextAuthOptions = {
     providers: [
-        githubProvider
+        githubProvider,
+        SiweProvider
     ],
+    pages: {
+        signIn: "/signin"
+    },
     callbacks: {
         async jwt({ token, account }) {
             if (account) {
@@ -27,10 +32,15 @@ export const authOptions: NextAuthOptions = {
                     visibleName: token.name ?? "unknown",
                     email: token.email ?? "unknown",
                     image: token.picture as string
+                } as User,
+                "siwe-csrf": {
+                    provider: "siwe-csrf",
+                    address: token.sub as string,
                 }
             }
             const ud = userData[token.provider as string]
             console.log(JSON.stringify(ud))
+            // @ts-expect-error
             session.user = ud
             return session;
         },
