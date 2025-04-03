@@ -19,46 +19,49 @@ function SiweProvider(options: SiweOptions = {}): Provider {
             signedMessage: {label: "Signed Message", type: "text"},
         },
         async authorize(credentials, req) {
-            console.log("AUTHORIZE", credentials)
-            if (!credentials?.signedMessage || !credentials?.message) {
-                console.log("AUTHORIZE", "ERR")
-                return null
-            }
-
             try {
-                const siwe = new SiweMessage(JSON.parse(credentials?.message))
-                const result = await siwe.verify({
-                    signature: credentials.signedMessage,
-                    nonce: await getCsrfToken({req: {headers: req.headers}}),
-                })
-                if (!result.success) {
-                    throw new Error("Invalid signature")
-                }
-                if (SIWE_STATEMENT !== result.data.statement) {
-                    throw new Error("Statement mismatch")
-                }
-                if (new Date(result.data.expirationTime as string) < new Date()) {
-                    throw new Error("Signature expired")
-                }
-                if (!adapter) {
-                    return {
-                        id: siwe.address,
-                        address: siwe.address
-                    }
-                }
-
-                return saveUserToDb(siwe, adapter)
+                return await doAuthorize(credentials, req, adapter)
             } catch (error) {
-                console.log(error)
+                console.log("Failed to authorize with SIWE", error)
                 return null
             }
         },
     }
 }
 
-function validateCredentials(credentials: any) {
-    if (!credentials?.signedMessage || !credentials?.message) {
-        throw new Error("Missing credentials")
+async function doAuthorize(credentials: any, req: any, adapter?: Adapter) {
+    const siwe = new SiweMessage(JSON.parse(credentials?.message))
+    const nonce = await getCsrfToken({req: {headers: req.headers}})
+    if (!nonce) {
+        throw new Error("Missing nonce")
+    }
+    await verifySignature({siwe, credentials, nonce})
+    if (!adapter) {
+        return {
+            id: siwe.address,
+            address: siwe.address
+        }
+    }
+    return saveUserToDb(siwe, adapter)
+}
+
+async function verifySignature({siwe, credentials, nonce}: {
+    siwe: SiweMessage,
+    credentials: any,
+    nonce: string
+}) {
+    const result = await siwe.verify({
+        signature: credentials.signedMessage,
+        nonce,
+    })
+    if (!result.success) {
+        throw new Error("Invalid signature")
+    }
+    if (SIWE_STATEMENT !== result.data.statement) {
+        throw new Error("Statement mismatch")
+    }
+    if (new Date(result.data.expirationTime as string) < new Date()) {
+        throw new Error("Signature expired")
     }
 }
 
