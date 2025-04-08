@@ -1,11 +1,7 @@
 name: Publish Packages
 
 on:
-  push:
-    branches:
-      - main
-      - 'release/v*'
-  pull_request:
+  workflow_dispatch:
     branches:
       - main
 
