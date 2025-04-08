@@ -4,10 +4,14 @@ on:
   workflow_dispatch:
     branches:
       - main
+  push:
+    branches:
+      - 'release/v**'
 
 jobs:
   version:
     name: Version Packages
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,32 +37,37 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Create Release Pull Request
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          commit: "chore: version packages"
-          title: "chore: version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Version Packages
+        run: pnpm changeset version
 
       - name: Get Package Version
         id: get-version
         if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
         run: |
+          if [ ! -f "./packages/siwe/package.json" ]; then
+            echo "Error: ./packages/siwe/package.json not found"
+            exit 1
+          fi
           VERSION=$(node -p "require('./packages/siwe/package.json').version")
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not determine version"
+            exit 1
+          fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Release Branch
-        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git checkout -b release/v${{ steps.get-version.outputs.version }}
+          git add .
+          git commit -m "chore: release v${{ steps.get-version.outputs.version }}"
           git push origin release/v${{ steps.get-version.outputs.version }}
 
   publish:
     name: Publish Packages
+    if: startsWith(github.ref, 'refs/heads/release/v')
+    needs: version
     runs-on: ubuntu-latest
     permissions:
       contents: write
