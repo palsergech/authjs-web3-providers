@@ -37,8 +37,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Version Packages
-        run: pnpm changeset version
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Package Version
         id: get-version
@@ -56,13 +58,26 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Release Branch
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout -b release/v${{ steps.get-version.outputs.version }}
-          git add .
-          git commit -m "chore: release v${{ steps.get-version.outputs.version }}"
-          git push origin release/v${{ steps.get-version.outputs.version }}
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: release/v${{ steps.get-version.outputs.version }}
+          base: main
+          title: "chore: release v${{ steps.get-version.outputs.version }}"
+          body: "Release branch for version ${{ steps.get-version.outputs.version }}"
+          commit-message: "chore: release v${{ steps.get-version.outputs.version }}"
+          delete-branch: false
+          push-to-fork: false
+          branch-suffix: none
+          draft: false
+          labels: release
+          assignees: ${{ github.actor }}
+          reviewers: ${{ github.actor }}
+          team-reviewers: ''
+          milestone: ''
+          project: ''
+          project-column: ''
+          request-to-parent: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     name: Publish Packages
