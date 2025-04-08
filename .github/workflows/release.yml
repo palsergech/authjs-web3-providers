@@ -83,8 +83,8 @@ jobs:
 
       - name: Commit and Push Version Changes
         run: |
-          git add .
-          git commit -m "chore: release v${{ steps.get-version.outputs.version }}"
+          # git add .
+          # git commit -m "chore: release v${{ steps.get-version.outputs.version }}"
           git push origin release/v${{ steps.get-version.outputs.version }}
 
   publish:
