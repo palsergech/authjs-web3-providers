@@ -39,6 +39,9 @@ importers:
       authjs-web3-providers-siwe:
         specifier: workspace:*
         version: link:../../packages/authjs-web3-providers-siwe
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
       next:
         specifier: 15.2.4
         version: 15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -91,6 +94,9 @@ importers:
 
   packages/authjs-web3-providers-siwe:
     dependencies:
+      cookie:
+        specifier: ^1.0.2
+        version: 1.0.2
       next-auth:
         specifier: catalog:next-auth-4
         version: 4.24.11(next@15.2.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1165,6 +1171,10 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
+
+  cookie@1.0.2:
+    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
+    engines: {node: '>=18'}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -4515,6 +4525,8 @@ snapshots:
   cookie-es@1.2.2: {}
 
   cookie@0.7.2: {}
+
+  cookie@1.0.2: {}
 
   core-util-is@1.0.3: {}
 

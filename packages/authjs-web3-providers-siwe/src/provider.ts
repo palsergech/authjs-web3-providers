@@ -3,13 +3,17 @@ import {SiweMessage} from "siwe"
 import {getCsrfToken} from "next-auth/react"
 import {SIWE_PROVIDER_ID, SIWE_PROVIDER_NAME, SIWE_STATEMENT} from "./constants"
 import {Adapter} from "next-auth/adapters";
+import {CookieOption, RequestInternal,} from "next-auth";
+import {getToken} from "next-auth/jwt";
+import { parse } from "cookie";
 
-type SiweOptions = {
+export type Web3ProviderOptions = {
+    sessionCookie?: CookieOption
     adapter?: Adapter
 }
 
-function SiweProvider(options: SiweOptions = {}): Provider {
-    const {adapter} = options
+function SiweProvider(options: Web3ProviderOptions = {}): Provider {
+    const {adapter, sessionCookie} = options
     return {
         id: SIWE_PROVIDER_ID,
         type: "credentials",
@@ -20,7 +24,7 @@ function SiweProvider(options: SiweOptions = {}): Provider {
         },
         async authorize(credentials, req) {
             try {
-                return await doAuthorize(credentials, req, adapter)
+                return await doAuthorize({credentials, req, adapter, sessionCookie})
             } catch (error) {
                 console.log("Failed to authorize with SIWE", error)
                 return null
@@ -29,7 +33,12 @@ function SiweProvider(options: SiweOptions = {}): Provider {
     }
 }
 
-async function doAuthorize(credentials: any, req: any, adapter?: Adapter) {
+async function doAuthorize({credentials, req, adapter, sessionCookie}: {
+    credentials: any,
+    req: Pick<RequestInternal, "body" | "query" | "headers" | "method">,
+    adapter?: Adapter,
+    sessionCookie?: CookieOption
+}) {
     const siwe = new SiweMessage(JSON.parse(credentials?.message))
     const nonce = await getCsrfToken({req: {headers: req.headers}})
     if (!nonce) {
@@ -42,7 +51,7 @@ async function doAuthorize(credentials: any, req: any, adapter?: Adapter) {
             address: siwe.address
         }
     }
-    return saveUserToDb(siwe, adapter)
+    return saveUserToDb({siwe, adapter, sessionCookie, req})
 }
 
 async function verifySignature({siwe, credentials, nonce}: {
@@ -65,33 +74,80 @@ async function verifySignature({siwe, credentials, nonce}: {
     }
 }
 
-async function saveUserToDb(siwe: SiweMessage, adapter: Adapter) {
-    const user = await adapter.getUserByAccount!!({
+async function getCurrentSession({sessionCookie, req}: {
+    sessionCookie?: CookieOption,
+    req: Pick<RequestInternal, "body" | "query" | "headers" | "method">
+}) {
+    const headers = req.headers ?? {}
+    const cookies = parse(headers?.cookie ?? "")
+    const defaultSecureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
+        !!process.env.VERCEL
+    const defaultSessionCookie = defaultSecureCookie
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token"
+    const secret = process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
+    const token = await getToken({
+        cookieName: sessionCookie?.name ?? defaultSessionCookie,
+        secureCookie: sessionCookie?.options.secure ?? defaultSecureCookie,
+        // @ts-expect-error
+        req: {
+            cookies,
+            headers
+        },
+        secret
+    })
+    console.log("CURRENT TOKEN", token)
+    if (!token) {
+        return null
+    }
+    return token.sub
+}
+
+async function saveUserToDb(params: {
+    siwe: SiweMessage,
+    adapter: Adapter,
+    sessionCookie?: CookieOption,
+    req: Pick<RequestInternal, "body" | "query" | "headers" | "method">
+}) {
+    const {siwe, adapter, sessionCookie, req} = params
+    const userId = await getCurrentSession({sessionCookie, req})
+    if (!userId) {
+        throw new Error("No user id found")
+    }
+    return linkAccountIfNeeded({siwe, adapter, currentUserId: userId, sessionCookie, req})
+}
+
+async function linkAccountIfNeeded(params: {
+    siwe: SiweMessage,
+    adapter: Adapter,
+    currentUserId: string,
+    sessionCookie?: CookieOption,
+    req: Pick<RequestInternal, "body" | "query" | "headers" | "method">
+}) {
+    const {siwe, adapter, sessionCookie, req, currentUserId} = params
+    const web3Account = await adapter.getUserByAccount!!({
         providerAccountId: siwe.address,
         provider: SIWE_PROVIDER_ID
     })
-    if (user) {
+    if (web3Account) {
         return {
-            id: user.id,
+            id: web3Account.id,
             address: siwe.address
         }
     }
-    const newUser = await adapter.createUser!!({
-        id: crypto.randomUUID(),
-        name: siwe.address,
-        email: siwe.address,
-        emailVerified: null
-    })
+    const storedUser = await adapter.getUser!!(currentUserId)
+    if (!storedUser) {
+        throw new Error("User not found")
+    }
     await adapter.linkAccount!!({
-        userId: newUser.id,
+        userId: currentUserId,
         type: "email",
         providerAccountId: siwe.address,
         provider: SIWE_PROVIDER_ID,
     })
     return {
-        id: newUser.id,
-        name: siwe.address,
-        address: siwe.address,
+        id: currentUserId,
+        address: siwe.address
     }
 }
 

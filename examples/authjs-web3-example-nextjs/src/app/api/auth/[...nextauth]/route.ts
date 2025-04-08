@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
             session.user = token
             return session;
         },
-    },
+    }
 }
 
 const handler = NextAuth(authOptions)
