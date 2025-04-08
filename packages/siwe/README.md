@@ -1,10 +1,10 @@
-# AuthJS Web3 Providers - SIWE
+# @authjs-web3-providers/siwe
 
-[![npm version](https://badge.fury.io/js/authjs-web3-providers-siwe.svg)](https://badge.fury.io/js/authjs-web3-providers-siwe)
+[![npm version](https://badge.fury.io/js/@authjs-web3-providers%2Fsiwe.svg)](https://badge.fury.io/js/@authjs-web3-providers%2Fsiwe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 
-A Web3 authentication provider for Auth.js (NextAuth.js) using Sign-In with Ethereum (SIWE).
+Sign-In with Ethereum (SIWE) provider for Auth.js (NextAuth.js).
 
 ## Features
 
@@ -17,17 +17,17 @@ A Web3 authentication provider for Auth.js (NextAuth.js) using Sign-In with Ethe
 ## Installation
 
 ```bash
-npm install authjs-web3-providers-siwe
+npm install @authjs-web3-providers/siwe
 # or
-yarn add authjs-web3-providers-siwe
+yarn add @authjs-web3-providers/siwe
 # or
-pnpm add authjs-web3-providers-siwe
+pnpm add @authjs-web3-providers/siwe
 ```
 
 ## Quick Start
 
 ```typescript
-import { SiweProvider } from 'authjs-web3-providers-siwe';
+import { SiweProvider } from '@authjs-web3-providers/siwe';
 import { NextAuthOptions } from 'next-auth';
 
 export const authOptions: NextAuthOptions = {
@@ -75,7 +75,7 @@ function SiweProvider(options?: Web3ProviderOptions): Provider;
 ### Basic Usage with Default Settings
 
 ```typescript
-import { SiweProvider } from 'authjs-web3-providers-siwe';
+import { SiweProvider } from '@authjs-web3-providers/siwe';
 import { NextAuthOptions } from 'next-auth';
 
 export const authOptions: NextAuthOptions = {
@@ -91,7 +91,7 @@ export const authOptions: NextAuthOptions = {
 ### With Custom Session Cookie
 
 ```typescript
-import { SiweProvider } from 'authjs-web3-providers-siwe';
+import { SiweProvider } from '@authjs-web3-providers/siwe';
 import { NextAuthOptions } from 'next-auth';
 
 export const authOptions: NextAuthOptions = {
@@ -114,11 +114,11 @@ export const authOptions: NextAuthOptions = {
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please see our [Contributing Guide](../../CONTRIBUTING.md) for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This package is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
 
 ## Security
 

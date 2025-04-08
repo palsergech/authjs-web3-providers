@@ -1,5 +1,5 @@
 {
-  "name": "authjs-web3-providers-siwe",
+  "name": "@authjs-web3-providers/siwe",
   "version": "0.1.0",
   "description": "AuthJS Web3 Providers for Ethereum using SIWE (Sign-In with Ethereum)",
   "main": "dist/index.js",

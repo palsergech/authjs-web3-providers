@@ -1,6 +1,6 @@
 import NextAuth, {NextAuthOptions} from "next-auth"
 import GithubProvider from "next-auth/providers/github"
-import {SiweProvider} from "authjs-web3-providers-siwe/src";
+import {SiweProvider} from "../../../../../../../packages/siwe/src";
 import {pgPool} from "@/tools/postgres/postgres";
 import PostgresAdapter from "@auth/pg-adapter";
 
