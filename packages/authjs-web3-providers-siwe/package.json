@@ -1,18 +1,55 @@
 {
   "name": "authjs-web3-providers-siwe",
   "version": "0.1.0",
-  "description": "AuthJS Web3 Providers Ethereum",
+  "description": "AuthJS Web3 Providers for Ethereum using SIWE (Sign-In with Ethereum)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "docs": "typedoc --out docs src"
   },
   "dependencies": {
     "cookie": "^1.0.2",
     "next-auth": "catalog:next-auth-4",
     "siwe": "catalog:siwe-3"
   },
-  "keywords": [],
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typedoc": "^0.24.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "auth",
+    "web3",
+    "ethereum",
+    "siwe",
+    "next-auth",
+    "authentication"
+  ],
   "author": "palsergech",
-  "license": "ISC"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/authjs-web3-providers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/authjs-web3-providers/issues"
+  },
+  "homepage": "https://github.com/yourusername/authjs-web3-providers#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
