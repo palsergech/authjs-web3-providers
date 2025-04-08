@@ -58,26 +58,34 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Release Branch
-        uses: peter-evans/create-pull-request@v5
+        uses: actions/github-script@v7
         with:
-          branch: release/v${{ steps.get-version.outputs.version }}
-          base: main
-          title: "chore: release v${{ steps.get-version.outputs.version }}"
-          body: "Release branch for version ${{ steps.get-version.outputs.version }}"
-          commit-message: "chore: release v${{ steps.get-version.outputs.version }}"
-          delete-branch: false
-          push-to-fork: false
-          branch-suffix: none
-          draft: false
-          labels: release
-          assignees: ${{ github.actor }}
-          reviewers: ${{ github.actor }}
-          team-reviewers: ''
-          milestone: ''
-          project: ''
-          project-column: ''
-          request-to-parent: false
-          token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branchName = `release/v${{ steps.get-version.outputs.version }}`
+            const ref = `refs/heads/${branchName}`
+            
+            // Get the current commit SHA
+            const { data: { object: { sha } } } = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'heads/main'
+            })
+            
+            // Create the new branch
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: ref,
+              sha: sha
+            })
+            
+            // Add a label to the branch
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['release']
+            })
 
   publish:
     name: Publish Packages
