@@ -3,7 +3,8 @@ name: Publish Packages
 on:
   push:
     branches:
-      - 'release/**'
+      - main
+      - 'release/v*'
   pull_request:
     branches:
       - main
@@ -47,10 +48,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Get Package Version
+        id: get-version
+        run: |
+          VERSION=$(node -p "require('./packages/siwe/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release Branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git checkout -b release/v${{ steps.get-version.outputs.version }}
+          git push origin release/v${{ steps.get-version.outputs.version }}
+
   publish:
     name: Publish Packages
     needs: version
-    if: github.ref == 'refs/heads/release/next'
+    if: startsWith(github.ref, 'refs/heads/release/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
