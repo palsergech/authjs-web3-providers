@@ -77,14 +77,6 @@ jobs:
               ref: ref,
               sha: sha
             })
-            
-            // Add a label to the branch
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              labels: ['release']
-            })
 
   publish:
     name: Publish Packages
