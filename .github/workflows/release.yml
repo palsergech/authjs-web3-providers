@@ -92,35 +92,32 @@ jobs:
           echo "Git log:"
           git log -1
 
-  publish:
-    name: Publish Packages
-    if: startsWith(github.ref, 'refs/heads/release/v')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      id-token: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Trigger Publish Workflow
+        uses: actions/github-script@v7
         with:
-          fetch-depth: 0
+          script: |
+            try {
+              // First, get the workflow ID
+              const { data: workflows } = await github.rest.actions.listRepoWorkflows({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+              
+              const publishWorkflow = workflows.workflows.find(w => w.name === 'Publish Packages');
+              if (!publishWorkflow) {
+                throw new Error('Publish workflow not found');
+              }
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-          run_install: false
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Publish Packages
-        run: pnpm publish --filter "{./packages/*}" --registry https://registry.npmjs.org
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
+              // Then trigger it
+              const { data: { id } } = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: publishWorkflow.id,
+                ref: `release/v${{ steps.get-version.outputs.version }}`
+              });
+              
+              console.log(`Successfully triggered publish workflow with ID: ${id}`);
+            } catch (error) {
+              console.error('Failed to trigger publish workflow:', error);
+              process.exit(1);
+            }
