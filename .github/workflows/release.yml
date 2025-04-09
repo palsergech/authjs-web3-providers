@@ -4,6 +4,12 @@ on:
   workflow_dispatch:
     branches:
       - main
+    inputs:
+      otp:
+        description: 'NPM OTP (required for publishing)'
+        required: true
+        run: pnpm publish --filter "{./packages/*}" --registry https://registry.npmjs.org --access public
+        type: string
 
 jobs:
   version:
@@ -22,7 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -74,18 +79,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
-          run_install: false
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Publish Packages
-        run: pnpm publish --filter "{./packages/*}" --registry https://registry.npmjs.org --access public
+        run: |
+          pnpm publish \
+            --access public \
+            --filter "{./packages/*}" \
+            --otp ${{ github.event.inputs.otp }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
