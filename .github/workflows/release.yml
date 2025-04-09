@@ -4,12 +4,6 @@ on:
   workflow_dispatch:
     branches:
       - main
-    inputs:
-      otp:
-        description: 'NPM OTP (required for publishing)'
-        required: true
-        run: pnpm publish --filter "{./packages/*}" --registry https://registry.npmjs.org --access public
-        type: string
 
 jobs:
   version:
@@ -38,8 +32,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Version Packages
-        run: pnpm changeset version
+      - name: Version packages
+        id: version
+        run: |
+          pnpm changeset version
+          # Get the new version from package.json
+          VERSION=$(node -p "require('./packages/siwe/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Configure Git
         run: |
@@ -59,7 +58,7 @@ jobs:
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
           git add .
-          git commit -m "chore: version packages"
+          git commit -m "chore: version packages to ${{ steps.version.outputs.version }}"
           git push origin main
 
   publish:
@@ -93,6 +92,5 @@ jobs:
           pnpm publish \
             --access public \
             --filter "{./packages/*}" \
-            --otp ${{ github.event.inputs.otp }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
