@@ -4,14 +4,10 @@ on:
   workflow_dispatch:
     branches:
       - main
-  push:
-    branches:
-      - 'release/v*'
 
 jobs:
   version:
     name: Version Packages
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -40,28 +36,10 @@ jobs:
       - name: Version Packages
         run: pnpm changeset version
 
-      - name: Get Package Version
-        id: get-version
-        run: |
-          if [ ! -f "./packages/siwe/package.json" ]; then
-            echo "Error: ./packages/siwe/package.json not found"
-            exit 1
-          fi
-          VERSION=$(node -p "require('./packages/siwe/package.json').version")
-          if [ -z "$VERSION" ]; then
-            echo "Error: Could not determine version"
-            exit 1
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
       - name: Configure Git
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-      - name: Create Release Branch
-        run: |
-          git checkout -b release/v${{ steps.get-version.outputs.version }} main
 
       - name: Check for Changes
         id: check-changes
@@ -76,48 +54,38 @@ jobs:
         if: steps.check-changes.outputs.has_changes == 'true'
         run: |
           git add .
-          git commit -m "chore: release v${{ steps.get-version.outputs.version }}"
-          git push origin release/v${{ steps.get-version.outputs.version }}
+          git commit -m "chore: version packages"
+          git push origin main
 
-      - name: Push Branch Without Changes
-        if: steps.check-changes.outputs.has_changes == 'false'
-        run: |
-          git push origin release/v${{ steps.get-version.outputs.version }}
-
-      - name: Debug Branch Info
-        run: |
-          echo "Branch name: release/v${{ steps.get-version.outputs.version }}"
-          echo "Git status:"
-          git status
-          echo "Git log:"
-          git log -1
-
-      - name: Trigger Publish Workflow
-        uses: actions/github-script@v7
+  publish:
+    name: Publish Packages
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          script: |
-            try {
-              // First, get the workflow ID
-              const { data: workflows } = await github.rest.actions.listRepoWorkflows({
-                owner: context.repo.owner,
-                repo: context.repo.repo
-              });
-              
-              const publishWorkflow = workflows.workflows.find(w => w.name === 'Publish Packages');
-              if (!publishWorkflow) {
-                throw new Error('Publish workflow not found');
-              }
+          fetch-depth: 0
 
-              // Then trigger it
-              const { data: { id } } = await github.rest.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: publishWorkflow.id,
-                ref: `release/v${{ steps.get-version.outputs.version }}`
-              });
-              
-              console.log(`Successfully triggered publish workflow with ID: ${id}`);
-            } catch (error) {
-              console.error('Failed to trigger publish workflow:', error);
-              process.exit(1);
-            }
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Publish Packages
+        run: pnpm publish --filter "{./packages/*}" --registry https://registry.npmjs.org --access public
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
