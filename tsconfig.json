@@ -12,5 +12,9 @@
     "outDir": "dist",
     "baseUrl": ".",
     "inlineSourceMap": false
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   }
 }

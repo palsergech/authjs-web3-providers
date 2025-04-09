@@ -2,8 +2,17 @@
   "name": "@authjs-web3-providers/siwe",
   "version": "0.3.0",
   "description": "AuthJS Web3 Providers for Ethereum using SIWE (Sign-In with Ethereum)",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "files": [
     "dist/**/*",
     "README.md",
