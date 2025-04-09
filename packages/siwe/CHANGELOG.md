@@ -1,5 +1,11 @@
 # @authjs-web3-providers/siwe
 
+## 0.4.0
+
+### Minor Changes
+
+- a83ad6e: make the lib a module
+
 ## 0.3.0
 
 ### Minor Changes

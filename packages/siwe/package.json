@@ -1,6 +1,6 @@
 {
   "name": "@authjs-web3-providers/siwe",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "AuthJS Web3 Providers for Ethereum using SIWE (Sign-In with Ethereum)",
   "type": "module",
   "main": "./dist/index.js",
