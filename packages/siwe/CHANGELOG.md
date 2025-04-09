@@ -1,5 +1,11 @@
 # @authjs-web3-providers/siwe
 
+## 0.4.1
+
+### Patch Changes
+
+- eedf435: test patch
+
 ## 0.4.0
 
 ### Minor Changes
