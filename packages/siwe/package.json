@@ -43,12 +43,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/authjs-web3-providers.git"
+    "url": "git+https://github.com/palsergech/authjs-web3-providers.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/authjs-web3-providers/issues"
+    "url": "https://github.com/palsergech/authjs-web3-providers/issues"
   },
-  "homepage": "https://github.com/yourusername/authjs-web3-providers#readme",
+  "homepage": "https://github.com/palsergech/authjs-web3-providers#readme",
   "publishConfig": {
     "access": "public"
   }
