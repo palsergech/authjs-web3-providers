@@ -6,7 +6,7 @@ on:
       - main
   push:
     branches:
-      - 'release/v**'
+      - 'release/v*'
 
 jobs:
   version:
@@ -94,25 +94,12 @@ jobs:
 
   publish:
     name: Publish Packages
+    if: startsWith(github.ref, 'refs/heads/release/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
     steps:
-      - name: Debug Context
-        run: |
-          echo "Event name: ${{ github.event_name }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "Base ref: ${{ github.base_ref }}"
-          echo "Head ref: ${{ github.head_ref }}"
-          echo "Branch: ${{ github.ref_name }}"
-
-      - name: Fail if not release branch
-        if: startsWith(github.ref, 'refs/heads/release/v')
-        run: |
-          echo "Error: This workflow should only run on release branches"
-          exit 1
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
