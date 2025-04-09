@@ -69,9 +69,10 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - name: Checkout
+      - name: Checkout Latest
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -91,6 +92,6 @@ jobs:
         run: |
           pnpm publish \
             --access public \
-            --filter "{./packages/*}" \
+            --filter "{./packages/*}"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
