@@ -7,3 +7,5 @@ catalogs:
     next-auth: ^4.24.11
   siwe-3:
     siwe: ^3.0.0
+  eslint:
+    eslint: ^9.24.0

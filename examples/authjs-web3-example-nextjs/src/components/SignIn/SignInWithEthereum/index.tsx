@@ -1,7 +1,7 @@
 'use client'
 
 import {useAccount, useConnect, useSignMessage} from "wagmi";
-import {signInWithEthereum} from "../../../../../../packages/siwe/src";
+import {signInWithEthereum} from "@authjs-web3-providers/siwe";
 import {getCsrfToken} from "next-auth/react";
 import {Hex} from "viem";
 
