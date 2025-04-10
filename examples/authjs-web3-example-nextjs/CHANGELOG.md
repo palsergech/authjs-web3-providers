@@ -1,5 +1,15 @@
 # authjs-web3-example-nextjs
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [15d044f]
+- Updated dependencies [1084403]
+- Updated dependencies [9ea81e3]
+  - @authjs-web3-providers/siwe@0.5.0
+  - @authjs-web3-providers/solana@0.5.0
+
 ## 0.1.4
 
 ### Patch Changes

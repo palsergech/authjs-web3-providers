@@ -1,6 +1,6 @@
 {
   "name": "@authjs-web3-providers/solana",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "AuthJS Web3 Providers for Solana",
   "type": "module",
   "main": "./dist/index.js",
@@ -66,7 +66,13 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.ts"],
-    "moduleFileExtensions": ["ts", "js", "json"]
+    "testMatch": [
+      "**/__tests__/**/*.test.ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ]
   }
 }

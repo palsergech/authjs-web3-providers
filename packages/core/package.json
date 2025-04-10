@@ -1,6 +1,6 @@
 {
   "name": "@authjs-web3-providers/core",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Contains base abstractions and utilities for AuthJS Web3 Providers",
   "type": "module",
   "main": "./dist/index.js",
