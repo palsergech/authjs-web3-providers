@@ -1,4 +1,4 @@
-import WalletProvider from "@/providers/WalletProvider";
+import WalletProvider from "@/components/ethereum/EthereumWalletProvider";
 import {ReactNode} from "react";
 
 export default function SiweLoginLayout({

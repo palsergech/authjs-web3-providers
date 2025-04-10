@@ -1,0 +1,64 @@
+{
+  "name": "@authjs-web3-providers/solana",
+  "version": "0.4.1",
+  "description": "AuthJS Web3 Providers for Solana",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p .",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "docs": "typedoc --out docs src"
+  },
+  "dependencies": {
+    "@authjs-web3-providers/core": "workspace:*",
+    "@solana/web3.js": "^1.87.6",
+    "next-auth": "catalog:next-auth-4",
+    "tweetnacl": "~1.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "catalog:eslint",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typedoc": "^0.24.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "auth",
+    "web3",
+    "solana",
+    "next-auth",
+    "authentication"
+  ],
+  "author": "palsergech",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palsergech/authjs-web3-providers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/palsergech/authjs-web3-providers/issues"
+  },
+  "homepage": "https://github.com/palsergech/authjs-web3-providers#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}

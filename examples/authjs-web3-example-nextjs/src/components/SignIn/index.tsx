@@ -17,6 +17,9 @@ export default function SignIn() {
                 <div>
                     <Link href="/signin/siwe">SIWE</Link>
                 </div>
+                <div>
+                    <Link href="/signin/solana">Solana</Link>
+                </div>
             </div>
         </>
     )

@@ -1,6 +1,7 @@
 import NextAuth, {NextAuthOptions} from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import {SiweProvider} from "@authjs-web3-providers/siwe";
+import {SolanaProvider} from "@authjs-web3-providers/solana";
 import {pgPool} from "@/tools/postgres/postgres";
 import PostgresAdapter from "@auth/pg-adapter";
 
@@ -13,10 +14,13 @@ const githubProvider = GithubProvider({
 
 const siweProvider = SiweProvider({adapter})
 
+const solanaProvider = SolanaProvider({adapter})
+
 export const authOptions: NextAuthOptions = {
     providers: [
         githubProvider,
-        siweProvider
+        siweProvider,
+        solanaProvider
     ],
     adapter,
     session: {
@@ -36,7 +40,6 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token, newSession, trigger }) {
             traceSession(session, token, newSession, trigger)
-            session.user = token
             return session;
         },
     }

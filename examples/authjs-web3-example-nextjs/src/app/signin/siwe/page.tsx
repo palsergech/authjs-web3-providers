@@ -1,5 +1,5 @@
 'use client'
 
-import SignInWithEthereum from "@/components/SignIn/SignInWithEthereum";
+import SignInWithEthereum from "@/components/ethereum/SignInWithEthereum";
 
 export default SignInWithEthereum
