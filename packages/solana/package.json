@@ -23,6 +23,7 @@
     "watch": "tsc -p . --watch",
     "prepublishOnly": "npm run build",
     "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
     "docs": "typedoc --out docs src"
   },
@@ -61,5 +62,11 @@
   "homepage": "https://github.com/palsergech/authjs-web3-providers#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/__tests__/**/*.test.ts"],
+    "moduleFileExtensions": ["ts", "js", "json"]
   }
 }

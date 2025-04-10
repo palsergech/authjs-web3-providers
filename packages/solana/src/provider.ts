@@ -5,7 +5,7 @@ import {SOLANA_PROVIDER_ID, SOLANA_PROVIDER_NAME, SOLANA_STATEMENT} from "./cons
 import {Adapter} from "next-auth/adapters";
 import {CookieOption} from "next-auth";
 import {EnhancedCredentialsProvider, CredentialsAccount} from "@authjs-web3-providers/core";
-import nacl from "tweetnacl";
+import { verifySignature } from './utils/verifySignature';
 
 export type SolanaProviderOptions = {
     sessionCookie?: CookieOption
@@ -39,7 +39,7 @@ function SolanaProvider(options: SolanaProviderOptions = {}): Provider {
                     throw new Error("Missing nonce")
                 }
 
-                await verifySignature({message, signature, nonce, address})
+                verifySignature({message, signature, address})
 
                 const account: CredentialsAccount = {
                     providerAccountId: `${SOLANA_PROVIDER_ID}:${address}`,
@@ -56,39 +56,6 @@ function SolanaProvider(options: SolanaProviderOptions = {}): Provider {
             }
         },
     })
-}
-
-async function verifySignature({message, signature, nonce, address}: {
-    message: string;
-    signature: string;
-    nonce: string
-    address: string
-}): Promise<string> {
-    if (!message.includes(nonce)) {
-        throw new Error("Nonce mismatch");
-    }
-
-    if (message !== SOLANA_STATEMENT) {
-        throw new Error("Statement mismatch");
-    }
-
-    const publicKey = new PublicKey(address);
-    const messageBytes = new TextEncoder().encode(message);
-    const s = signature + "112"
-    const signatureBytes = Buffer.from(s, 'base64');
-    const publicKeyBytes = publicKey.toBytes();
-
-    const isValid = nacl.sign.detached.verify(
-        messageBytes,
-        signatureBytes,
-        publicKeyBytes
-    );
-
-    if (!isValid) {
-        throw new Error("Invalid signature");
-    }
-
-    return address;
 }
 
 export default SolanaProvider
