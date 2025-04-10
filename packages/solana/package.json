@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
     "prepublishOnly": "npm run build",
     "test": "jest",
     "lint": "eslint src/**/*.ts",

@@ -7,10 +7,14 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "watch": "turbo run watch",
+    "dev:all": "concurrently \"pnpm run watch\" \"pnpm run dev\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf packages/*/node_modules && rm -rf packages/*/dist && rm -rf packages/*/.next"
   },
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
+    "concurrently": "^8.2.2",
     "turbo": "^2.4.4",
     "typescript": "^5.0.0"
   }

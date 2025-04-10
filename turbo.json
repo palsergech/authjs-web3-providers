@@ -4,7 +4,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "dev": {},
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "watch": {
+      "cache": false,
+      "persistent": true,
+      "outputs": ["dist/**"]
+    },
     "lint": {},
     "test": {}
   }
