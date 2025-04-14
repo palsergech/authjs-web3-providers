@@ -2,8 +2,8 @@
 
 import { signIn } from "next-auth/react"
 import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/Card"
-import { Button } from "../ui/Button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button"
 
 export default function SignIn() {
   return (
