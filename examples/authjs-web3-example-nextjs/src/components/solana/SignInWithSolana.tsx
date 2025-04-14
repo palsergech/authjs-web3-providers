@@ -6,6 +6,8 @@ import { useState } from 'react';
 import { WalletName } from '@solana/wallet-adapter-base';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { signInWithSolana } from '@authjs-web3-providers/solana';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
 
 const WALLETS = [
   {
@@ -64,42 +66,52 @@ export default function SignInWithSolana() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-      <h1 className="text-2xl font-bold mb-4">Sign in with Solana</h1>
-      
-      {!publicKey ? (
-        <div className="w-full max-w-md space-y-4">
-          <h2 className="text-lg font-semibold text-center">Select a wallet</h2>
-          <div className="grid grid-cols-1 gap-4">
-            {WALLETS.map((wallet) => (
-              <button
-                key={wallet.name}
-                onClick={() => handleWalletSelect(wallet.name)}
-                className="flex items-center p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Sign in with Solana</CardTitle>
+          <CardDescription>
+            Connect your wallet to sign in with your Solana account
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {!publicKey ? (
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold text-center">Select a wallet</h2>
+              {WALLETS.map((wallet) => (
+                <Button
+                  key={wallet.name}
+                  onClick={() => handleWalletSelect(wallet.name)}
+                  variant="secondary"
+                  fullWidth
+                >
+                  <span className="font-medium">{wallet.name}</span>
+                </Button>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <span className="text-sm font-mono">
+                  {publicKey.toString().slice(0, 4)}...{publicKey.toString().slice(-4)}
+                </span>
+              </div>
+              <Button
+                onClick={handleSignIn}
+                disabled={isLoading}
+                variant="primary"
+                fullWidth
               >
-                <span className="font-medium">{wallet.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center space-y-4">
-          <p className="text-sm text-gray-600">
-            Connected: {publicKey.toString().slice(0, 4)}...{publicKey.toString().slice(-4)}
-          </p>
-          <button
-            onClick={handleSignIn}
-            disabled={isLoading}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50"
-          >
-            {isLoading ? 'Signing in...' : 'Sign in with Solana'}
-          </button>
-        </div>
-      )}
+                {isLoading ? 'Signing in...' : 'Sign in with Solana'}
+              </Button>
+            </div>
+          )}
 
-      {error && (
-        <p className="mt-4 text-red-500 text-center">{error}</p>
-      )}
+          {error && (
+            <p className="text-sm text-red-500 text-center">{error}</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 } 
