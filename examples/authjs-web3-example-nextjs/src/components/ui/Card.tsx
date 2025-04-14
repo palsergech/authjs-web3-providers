@@ -7,7 +7,7 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-white shadow-sm',
+        default: 'bg-white shadow-lg',
         info: 'bg-blue-50',
         success: 'bg-green-50',
         warning: 'bg-yellow-50',
@@ -44,7 +44,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex flex-col space-y-1.5 p-6', className)}
+        className={cn('flex flex-col space-y-1.5 p-4', className)}
         {...props}
       />
     )
@@ -89,7 +89,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
     return (
       <div
         ref={ref}
-        className={cn('p-6 pt-0', className)}
+        className={cn('p-4 pt-0', className)}
         {...props}
       />
     )
@@ -104,7 +104,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex items-center p-6 pt-0', className)}
+        className={cn('flex items-center p-4 pt-0', className)}
         {...props}
       />
     )

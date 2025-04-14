@@ -1,26 +1,29 @@
-export type Account =
+export type AccountView =
     | GitHubAccount
     | SolanaAccount
     | EvmAccount
 
-export type GitHubAccount = {
-    provider: "github",
+export type BaseAccount<P extends string> = {
+    provider: P,
+    providerAccountId: string,
+}
+
+export type GitHubAccount = BaseAccount<"github"> & {
     visibleName: string,
     email: string,
     image?: string
 }
 
-export type SolanaAccount = {
-    provider: "solana",
+export type SolanaAccount = BaseAccount<"solana"> & {
     account: string
 }
 
-export type EvmAccount = {
-    provider: "siwe-csrf",
+export type EvmAccount = BaseAccount<"siwe-csrf"> & {
     address: string,
     chainId: number
 }
 
-export type Session = {
-    loginAccount: Account
+export type AuthUser = {
+    id: string,
+    loginAccount: AccountView
 }

@@ -109,9 +109,9 @@ async function saveUserToDb(params: {
         provider: providerId,
         userId: user.id,
         type: "email",
-        privateData: credentialsUser.privateData,
         id_token: JSON.stringify({
-            publicData: credentialsUser.publicData
+            publicData: credentialsUser.publicData,
+            privateData: credentialsUser.privateData
         })
     })
     return user
