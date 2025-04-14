@@ -13,21 +13,24 @@ export async function signInWithSolana(options: SignInWithSolanaOptions) {
         // Validate address
         new PublicKey(options.address);
 
-        const message = SOLANA_STATEMENT
+        // Get nonce from CSRF token
+        const nonce = await options.csrfToken();
+        if (!nonce) {
+            throw new Error("Missing nonce");
+        }
+
+        // Construct message with nonce and address
+        const message = `${SOLANA_STATEMENT}\n\nNonce: ${nonce}\nAddress: ${options.address}`;
 
         // Request signature from wallet
         const signature = await options.signMessage(new TextEncoder().encode(message));
         const signatureBase64 = Buffer.from(signature).toString('base64');
-        console.log("original signature", signatureBase64)
-        const fakeSignature = signatureBase64.substring(0, 1) + 
-            String.fromCharCode(signatureBase64.charCodeAt(1) + 1) + 
-            signatureBase64.substring(2);
-        console.log("fake signature", fakeSignature)
 
         await signIn(SOLANA_PROVIDER_ID, {
             message,
-            signature: fakeSignature,
+            signature: signatureBase64,
             address: options.address,
+            nonce,
             redirect: true,
             callbackUrl: "/"
         });

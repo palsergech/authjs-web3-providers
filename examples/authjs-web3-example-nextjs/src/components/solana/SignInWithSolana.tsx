@@ -31,8 +31,6 @@ export default function SignInWithSolana() {
     try {
       setIsLoading(true);
       setError(null);
-      const nonce = await fetch('/api/auth/csrf').then(res => res.json());
-      const message = `Sign in with Solana to the app.\n\nNonce: ${nonce}\nAddress: ${publicKey.toString()}`;
       const csrfToken = async () => {
         const token = await getCsrfToken()
         if (!token) throw new Error("CSRF token not found")
