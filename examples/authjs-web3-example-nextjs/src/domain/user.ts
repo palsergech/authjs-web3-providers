@@ -1,17 +1,26 @@
-export type User =
-    | GitHubUser
-    | EthereumUser
+export type Account =
+    | GitHubAccount
+    | SolanaAccount
+    | EvmAccount
 
-export type GitHubUser = {
+export type GitHubAccount = {
     provider: "github",
-    id: string,
-    username: string,
     visibleName: string,
     email: string,
     image?: string
 }
 
-export type EthereumUser = {
+export type SolanaAccount = {
+    provider: "solana",
+    account: string
+}
+
+export type EvmAccount = {
     provider: "siwe-csrf",
-    address: string
+    address: string,
+    chainId: number
+}
+
+export type Session = {
+    loginAccount: Account
 }

@@ -2,51 +2,45 @@
 
 import { useSession } from 'next-auth/react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
+import { TextArea } from '@/components/ui/TextArea'
+import { AccountInfo } from '@/components/ui/AccountInfo'
+import { Account } from '@/domain/user'
+import { useEffect, useState } from 'react'
 
 export default function ProfilePage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const [loginAccount, setLoginAccount] = useState<Account | null>(null)
 
-  if (!session?.user) {
-    return null
-  }
+  useEffect(() => {
+    if (session?.user?.loginAccount) {
+      setLoginAccount(session.user.loginAccount as Account)
+    }
+  }, [session, status])
+
+  const sessionString = JSON.stringify(session, null, 2)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Profile</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Session Data</h3>
-          <textarea 
-            className="w-full h-32 p-2 text-sm font-mono bg-gray-50 border border-gray-200 rounded-md" 
-            value={JSON.stringify(session, null, 2)} 
-            readOnly
-          />
-        </div>
-        <div className="space-y-4">
-          {session.user.provider === 'github' && (
-            <>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Username</h3>
-                <p className="mt-1 text-sm text-gray-900">{session.user.username}</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                <p className="mt-1 text-sm text-gray-900">{session.user.email}</p>
-              </div>
-            </>
-          )}
-          {session.user.provider === 'siwe-csrf' && (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Profile</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-6">
+            <TextArea
+              label="Session Data"
+              value={sessionString}
+              readOnly
+            />
+          </div>
+          {loginAccount && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500">Address</h3>
-              <p className="mt-1 text-sm font-mono text-gray-900">
-                {session.user.address}
-              </p>
+              <h3>Logged In with</h3>
+              <AccountInfo account={loginAccount} />
             </div>
           )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   )
 } 
