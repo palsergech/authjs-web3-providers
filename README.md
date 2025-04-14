@@ -10,7 +10,9 @@ A collection of Web3 authentication providers for Auth.js (NextAuth.js).
 
 | Package | Version | Description |
 |---------|---------|-------------|
+| [@authjs-web3-providers/core](./packages/core) | [![npm version](https://badge.fury.io/js/@authjs-web3-providers%2Fcore.svg)](https://badge.fury.io/js/@authjs-web3-providers%2Fcore) | Core utilities and types for Web3 providers |
 | [@authjs-web3-providers/siwe](./packages/authjs-web3-providers-siwe) | [![npm version](https://badge.fury.io/js/@authjs-web3-providers%2Fsiwe.svg)](https://badge.fury.io/js/@authjs-web3-providers%2Fsiwe) | Sign-In with Ethereum (SIWE) provider |
+| [@authjs-web3-providers/solana](./packages/solana) | [![npm version](https://badge.fury.io/js/@authjs-web3-providers%2Fsolana.svg)](https://badge.fury.io/js/@authjs-web3-providers%2Fsolana) | Solana wallet authentication provider |
 
 ## Quick Start
 
@@ -22,6 +24,10 @@ yarn add @authjs-web3-providers/siwe
 # or
 pnpm add @authjs-web3-providers/siwe
 ```
+
+## Demo
+
+Try out the live demo application: [AuthJS Web3 Demo](https://authjs-web3-providers-demo.vercel.app)
 
 ## Examples
 
