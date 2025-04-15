@@ -1,8 +1,8 @@
-import { AccountView } from '@/domain/user'
+import { AccountView, BaseAccount } from '@/lib/user'
 import { Card, CardHeader, CardTitle, CardContent } from '../Card'
-import { 
+import {
   UserCircleIcon,
-  EnvelopeIcon, 
+  EnvelopeIcon,
   WalletIcon,
   GlobeAltIcon,
   CheckIcon,
@@ -11,45 +11,37 @@ import AccountUnlinkButton from './AccountUnlinkButton'
 import { mainnet } from 'viem/chains'
 import { Chain } from 'viem'
 import { useMemo } from 'react'
+import { AddAccount } from './AddAccount'
+import { providerInfo } from '@/lib/providerInfo'
 
 function EvmChainIdToName(chainId: number): Chain {
   return mainnet
 }
 
-const providerInfo = {
-  'github': {
-    name: 'GitHub',
-    icon: GlobeAltIcon,
-    color: 'text-gray-900'
-  },
-  'siwe-csrf': {
-    name: 'Ethereum',
-    icon: WalletIcon, 
-    color: 'text-blue-600'
-  },
-  'solana': {
-    name: 'Solana',
-    icon: WalletIcon,
-    color: 'text-purple-600'
-  }
-}
-
 interface AccountInfoProps {
-  account: AccountView,
+  providerId: keyof typeof providerInfo,
+  account?: AccountView,
   unlinkable?: boolean,
-  isLoginAccount?: boolean
+  isLoginAccount?: boolean,
+  onUnlink?: () => void
 }
 
-export function AccountInfo({ account, isLoginAccount, unlinkable }: AccountInfoProps) {
-  const provider = providerInfo[account.provider]
+export function AccountInfo({ 
+  providerId,
+  account,
+  isLoginAccount,
+  unlinkable,
+  onUnlink
+}: AccountInfoProps) {
+  const provider = providerInfo[providerId]
 
   const chain = useMemo(() => {
-    if (account.provider === 'siwe-csrf') {
+    if (account?.provider === 'siwe-csrf') {
       return EvmChainIdToName(account.chainId)
     }
     return null
   }, [account])
-  
+
   return (
     <Card>
       <CardHeader>
@@ -61,59 +53,64 @@ export function AccountInfo({ account, isLoginAccount, unlinkable }: AccountInfo
             {provider.name}
           </span>
           {isLoginAccount && (
-            <CheckIcon className="h-5 w-5 text-green-600" />          
+            <CheckIcon className="h-5 w-5 text-green-600" />
           )}
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          {account.provider === 'github' && account.image && (
-            <div className="flex items-center space-x-3">
-              <img 
-                src={account.image} 
-                alt={`${account.visibleName}'s avatar`}
-                className="h-12 w-12 rounded-full"
-              />
-              <div>
-                <div className="flex items-center space-x-2"  >
-                  <UserCircleIcon className="h-5 w-5 text-gray-400" />
-                  <p className="text-sm font-medium text-gray-900">{account.visibleName}</p>
+        {
+          account ? (
+            <div className="space-y-4">
+              {account.provider === 'github' && account.image && (
+                <div className="flex items-center space-x-3">
+                  <img
+                    src={account.image}
+                    alt={`${account.visibleName}'s avatar`}
+                    className="h-12 w-12 rounded-full"
+                  />
+                  <div>
+                    <div className="flex items-center space-x-2"  >
+                      <UserCircleIcon className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm font-medium text-gray-900">{account.visibleName}</p>
+                    </div>
+                    <div className="flex items-center space-x-2"  >
+                      <EnvelopeIcon className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm font-medium text-gray-900">{account.email}</p>
+                    </div>
+                  </div>
+                  {unlinkable && <AccountUnlinkButton account={account} onUnlink={onUnlink ?? (() => {})} />}
                 </div>
-                <div className="flex items-center space-x-2"  >
-                  <EnvelopeIcon className="h-5 w-5 text-gray-400" />
-                  <p className="text-sm font-medium text-gray-900">{account.email}</p>
+              )}
+              {account.provider === 'siwe-csrf' && (
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-3">
+                    <div>
+                      {chain && <p className="mt-1 text-sm font-mono text-gray-900">
+                        {chain.name}
+                      </p>}
+                      <p className="mt-1 text-sm font-mono text-gray-900">
+                        {account.address}
+                      </p>
+                    </div>
+                  </div>
+                  {unlinkable && <AccountUnlinkButton account={account} onUnlink={onUnlink} />}
                 </div>
-              </div>
-              {unlinkable && <AccountUnlinkButton account={account} />}
-            </div>
-          )}
-          {account.provider === 'siwe-csrf' && (
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-3">
-                <div>
-                  {chain && <p className="mt-1 text-sm font-mono text-gray-900">
-                    {chain.name}
-                  </p>}
-                  <p className="mt-1 text-sm font-mono text-gray-900">
-                    {account.address}
-                  </p>
+              )}
+              {account.provider === 'solana' && (
+                <div className="flex items-center space-x-3">
+                  <WalletIcon className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Account</h3>
+                    <p className="mt-1 text-sm font-mono text-gray-900">
+                      {account.account}
+                    </p>
+                  </div>
+                  {unlinkable && <AccountUnlinkButton account={account} onUnlink={onUnlink} />}
                 </div>
-              </div>
-              {unlinkable && <AccountUnlinkButton account={account} />}
+              )}
             </div>
-          )}
-          {account.provider === 'solana' && (
-            <div className="flex items-center space-x-3">
-              <WalletIcon className="h-5 w-5 text-gray-400" />
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Account</h3>
-                <p className="mt-1 text-sm font-mono text-gray-900">
-                  {account.account}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
+          ) : <AddAccount providerId={providerId} mode="link" />
+        }
       </CardContent>
     </Card>
   )

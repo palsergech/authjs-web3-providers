@@ -1,17 +1,17 @@
 import { Spinner } from "../Spinner"
 import { TrashIcon } from "@heroicons/react/24/outline"
 import { Button } from "../Button"
-import { AccountView } from "@/domain/user"
+import { AccountView } from "@/lib/user"
 import { unlinkAccount } from "@/actions/profile"
 import { useState } from "react"
 
-export default function AccountUnlinkButton({ account }: { account: AccountView }) {
+export default function AccountUnlinkButton({ account, onUnlink }: { account: AccountView, onUnlink: () => void }) {
     const [isLoading, setIsLoading] = useState(false)
     function unlink() {
       setIsLoading(true)
       unlinkAccount(account.provider, account.providerAccountId)
         .then(() => {
-          alert('Account unlinked')
+            onUnlink()
         })
         .catch((error) => {
           alert('Failed to unlink account')

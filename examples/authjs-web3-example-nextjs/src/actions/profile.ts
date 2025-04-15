@@ -1,7 +1,7 @@
 'use server'
 
 import { adapter, authOptions } from '@/authOptions'
-import { AccountView } from '@/domain/user'
+import { AccountView } from '@/lib/user'
 import { pgPool } from '@/tools/postgres/postgres'
 import { getServerSession, Session } from 'next-auth'
 import { revalidatePath } from 'next/cache'
