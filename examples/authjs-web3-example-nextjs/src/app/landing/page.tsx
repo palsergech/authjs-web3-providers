@@ -13,7 +13,7 @@ const features = [
   'Secure session management'
 ]
 
-export default function HelloPage() {
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
