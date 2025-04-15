@@ -11,8 +11,7 @@ export const pgPool = new PG.Pool({
     connectionTimeoutMillis: 2000,
     ...(process.env.DATABASE_SSL === 'true' ? {
         ssl: {
-            rejectUnauthorized: false,
-            sslmode: 'require'
+            rejectUnauthorized: false
         }
     } : {})
 })
