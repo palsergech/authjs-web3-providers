@@ -44,8 +44,8 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## Security
 
-If you discover any security related issues, please email security@yourdomain.com instead of using the issue tracker.
+If you discover any security related issues, please email paulpaulych@gmail.com instead of using the issue tracker.
 
 ## Support
 
-For support, please open an issue in the GitHub repository or contact us at support@yourdomain.com. 
+For support, please open an issue in the GitHub repository or contact us at paulpaulych@gmail.com. 
