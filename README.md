@@ -29,9 +29,7 @@ pnpm add @authjs-web3-providers/siwe
 
 Try out the live demo application: [AuthJS Web3 Demo](https://authjs-web3-providers-demo.vercel.app)
 
-## Examples
-
-Check out our example implementations:
+The source code of the demo application can be found in the `examples` folder:
 - [Next.js Example](./examples/authjs-web3-example-nextjs)
 
 ## Contributing
