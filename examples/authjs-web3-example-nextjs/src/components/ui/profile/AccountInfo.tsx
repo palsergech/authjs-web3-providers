@@ -78,7 +78,7 @@ export function AccountInfo({
                       <p className="text-sm font-medium text-gray-900">{account.email}</p>
                     </div>
                   </div>
-                  {unlinkable && <AccountUnlinkButton account={account} onUnlink={onUnlink ?? (() => {})} />}
+                  {unlinkable && <AccountUnlinkButton account={account} onUnlink={onUnlink}/>}
                 </div>
               )}
               {account.provider === 'siwe-csrf' && (

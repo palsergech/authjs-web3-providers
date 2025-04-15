@@ -5,13 +5,13 @@ import { AccountView } from "@/lib/user"
 import { unlinkAccount } from "@/actions/profile"
 import { useState } from "react"
 
-export default function AccountUnlinkButton({ account, onUnlink }: { account: AccountView, onUnlink: () => void }) {
+export default function AccountUnlinkButton({ account, onUnlink }: { account: AccountView, onUnlink?: () => void }) {
     const [isLoading, setIsLoading] = useState(false)
     function unlink() {
       setIsLoading(true)
       unlinkAccount(account.provider, account.providerAccountId)
         .then(() => {
-            onUnlink()
+            onUnlink?.()
         })
         .catch((error) => {
           alert('Failed to unlink account')
